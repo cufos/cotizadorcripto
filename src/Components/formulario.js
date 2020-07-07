@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
+import axios from "axios";
 
 import useMoneda from "../hooks/useMoneda";
 import useCryptomoneda from "../hooks/useCryptomoneda";
@@ -23,6 +24,12 @@ const Boton = styled.input`
 `;
 
 const Formulario = () => {
+  //estado de cryptomonedas en el formulario
+  const [listacripto, actualizarLista] = useState([]);
+
+  //hook para el error
+  const [error, guardarError] = useState(false);
+
   const Monedas = [
     { codigo: "MXN", nombre: "Peso Mexicano" },
     { codigo: "EUR", nombre: "Euro" },
@@ -31,11 +38,41 @@ const Formulario = () => {
   ];
   //utilizando e hook personalizado
   const [moneda, Seleccionar] = useMoneda("Elige tu Moneda", "", Monedas);
+  //utilizando el hook de cryptomoneda
+  const [crypto, SelectCrypto] = useCryptomoneda(
+    "Elige tu Cryptomoneda",
+    "",
+    listacripto
+  );
 
-  const [crypto, SelectCrypto] = useCryptomoneda("Elige tu Cryptomoneda", "");
+  //utilizando useEffect
+  useEffect(() => {
+    const ConsultarAPI = async () => {
+      const url =
+        "https://min-api.cryptocompare.com/data/top/mktcapfull?limit=10&tsym=USD";
+
+      const resultado = await axios.get(url);
+
+      actualizarLista(resultado.data.Data);
+    };
+
+    ConsultarAPI();
+  }, []);
+
+  const cotizarMoneda = (e) => {
+    e.preventDefault();
+
+    //validar el formulario
+    if (moneda === "" || crypto === "") {
+      guardarError(true);
+      return;
+    }
+    guardarError(false);
+  };
 
   return (
-    <form>
+    <form onSubmit={cotizarMoneda}>
+      {error ? <p>Los campos no deben estar vacios</p> : null}
       <Seleccionar />
       <SelectCrypto />
       <Boton type="submit" value="Calcular" />

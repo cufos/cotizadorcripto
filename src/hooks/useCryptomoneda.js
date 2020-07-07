@@ -31,11 +31,11 @@ const useCryptomoneda = (label, stateInicial, opciones) => {
 
       <Select onChange={(e) => actualizarState(e.target.value)} value={state}>
         <option value="">-- Seleccione --</option>
-        {/* {opciones.map((opcion) => (
-          <option key={opcion.codigo} value={opcion.codigo}>
-            {opcion.nombre}
+        {opciones.map((opcion) => (
+          <option key={opcion.CoinInfo.id} value={opcion.CoinInfo.Name}>
+            {opcion.CoinInfo.FullName}
           </option>
-        ))} */}
+        ))}
       </Select>
     </Fragment>
   );
