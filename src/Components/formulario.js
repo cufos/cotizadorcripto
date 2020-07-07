@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import axios from "axios";
 
+import Error from "./error";
 import useMoneda from "../hooks/useMoneda";
 import useCryptomoneda from "../hooks/useCryptomoneda";
 
@@ -23,7 +24,7 @@ const Boton = styled.input`
   }
 `;
 
-const Formulario = () => {
+const Formulario = ({ guardarMoneda, guardarCriptomoneda }) => {
   //estado de cryptomonedas en el formulario
   const [listacripto, actualizarLista] = useState([]);
 
@@ -68,11 +69,13 @@ const Formulario = () => {
       return;
     }
     guardarError(false);
+    guardarMoneda(moneda);
+    guardarCriptomoneda(crypto);
   };
 
   return (
     <form onSubmit={cotizarMoneda}>
-      {error ? <p>Los campos no deben estar vacios</p> : null}
+      {error ? <Error mensaje="Todos los campos son obligatorios" /> : null}
       <Seleccionar />
       <SelectCrypto />
       <Boton type="submit" value="Calcular" />
