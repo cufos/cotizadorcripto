@@ -58,7 +58,7 @@ function App() {
 
       const url = `https://min-api.cryptocompare.com/data/pricemultifull?fsyms=${criptomoneda}&tsyms=${moneda}`;
 
-      const resultado = await axios.get(url);
+      const resultado = await axios(url);
       console.log(resultado);
 
       //Mostrando el spinner
